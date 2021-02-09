@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 from django.contrib import messages
+import dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,6 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
+
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '+_63vsdxav2-56tw#y3d!4i$^b44z+crynb@guhn*vb1y_#9uy'
@@ -130,3 +136,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
+
+# email stuff
+EMAIL_HOST = os.environ['EMAIL_HOST']
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = os.environ['EMAIL_HOST_USER']
+EMAIL_PORT = 587
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
