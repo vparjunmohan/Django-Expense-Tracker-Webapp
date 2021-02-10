@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.views import View
-import  json
+import json
 from django.http import  JsonResponse
 from django.contrib.auth.models import User
 from validate_email import validate_email
@@ -12,6 +12,8 @@ from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeEr
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from .utils import AppTokenGenerator, token_generator
+
+from django.contrib import auth
 # Create your views here.
 
 class RegistrationView(View): 
@@ -110,3 +112,45 @@ class VerificationView(View):
 class LoginView(View):
     def get(self, request):
         return render(request, 'authentication/login.html')
+
+    def post(self, request):
+        username = request.POST['username']
+        password = request.POST['password']
+        
+        if username and password:
+            user = auth.authenticate(username=username, password=password)
+
+            if user:
+                if user.is_active:
+                    auth.login(request, user)
+                    messages.success(request, f'Welcome, {user.username}')
+                    return redirect('expenses')
+        
+                messages.error(request, 'Account is not activated. Please check your email.')
+                return render(request, 'authentication/login.html')
+            
+            messages.error(request, 'Invalid credentials, try again')
+            return render(request, 'authentication/login.html')
+            
+        messages.error(request, 'Please fill username and password')
+        return render(request, 'authentication/login.html')
+
+
+class LogoutView(View):
+    def post(self, request):
+        auth.logout(request)
+        messages.success(request, 'You have been logged out')
+        return redirect('login')
+
+
+
+
+
+
+
+
+
+
+
+
+
