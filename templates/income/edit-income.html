@@ -1,23 +1,23 @@
 {% extends 'base.html' %} {% block content %}
-<h2>Edit Expenses</h2>
+<h2>Edit Income</h2>
 <div class="container mt-4">
 <div class="row">
 <div class="col-md-10">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
-        <a href="{% url 'expenses' %}">Expenses</a>
+        <a href="{% url 'income' %}">Income</a>
       </li>
-      <li class="breadcrumb-item active" aria-current="page">Edit Expence</li>
+      <li class="breadcrumb-item active" aria-current="page">Edit Income</li>
     </ol>
   </nav></div>
 <div class="col-md-2">
-<a style="margin-top: 6px;" class="btn btn-danger btn-sm" href="{% url 'expense-delete' expense.pk %}">Delete</a></div>
+<a style="margin-top: 6px;" class="btn btn-danger btn-sm" href="{% url 'income-delete' income.pk %}">Delete</a></div>
 </div>
 
   <div class="card">
     <div class="card-body">
-      <form action="{% url 'expense-edit' expense.pk%}" method="post">
+      <form action="{% url 'income-edit' income.pk%}" method="post">
         {% include 'partials/_messages.html' %} {% csrf_token %}
         <div class="form-group">
           <label for="">Amount</label>
@@ -38,14 +38,14 @@
           />
         </div>
         <div class="form-group">
-          <label for="">Category</label>
-          <select class="form-control" name="category" id="">
-					<option selected name="category" value="{{values.category}}">
-              {{values.category}}
+          <label for="">Source</label>
+          <select class="form-control" name="source" id="">
+					<option selected name="source" value="{{values.source}}">
+              {{values.source}}
             </option>
-            {% for category in categories %}
-            <option name="category" value="{{category.name}}">
-              {{category.name}}
+            {% for source in sources %}
+            <option name="source" value="{{source.name}}">
+              {{source.name}}
             </option>
             {% endfor %}
           </select>
@@ -55,7 +55,7 @@
           <input
             type="date"
             class="form-control form-control-sm"
-            name="expense_date"
+            name="income_date"
             value="{{ values.date | date:'Y-m-d' }}"
           />
         </div>

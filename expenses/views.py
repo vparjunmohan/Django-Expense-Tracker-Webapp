@@ -10,6 +10,8 @@ import json
 from django.http import JsonResponse
 # Create your views here.
 
+
+@login_required(login_url='/authentication/login/')
 def search_expenses(request):
     if request.method == 'POST':
         search_str = json.loads(request.body).get('searchText')
@@ -26,7 +28,10 @@ def index(request):
     paginator = Paginator(expenses, 5)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
-    currency = UserPreference.objects.get(user=request.user).currency
+    try:
+        currency = UserPreference.objects.get(user=request.user).currency
+    except UserPreference.DoesNotExist:
+        currency = None
     context = {
         'expenses': expenses,
         'page_obj': page_obj,
@@ -35,6 +40,7 @@ def index(request):
     return render(request, 'expenses/index.html', context)
 
 
+@login_required(login_url='/authentication/login/')
 def add_expense(request):
     categories = Category.objects.all()
     context = {'categories': categories, 'values':request.POST}
@@ -65,7 +71,7 @@ def add_expense(request):
 
         return redirect('expenses')
 
-
+@login_required(login_url='/authentication/login/')
 def expense_edit(request, pk):
     expense = Expense.objects.get(id=pk)
     categories = Category.objects.all()
@@ -101,7 +107,7 @@ def expense_edit(request, pk):
         messages.success(request, 'Expenses Updated')
         return redirect('expenses')
         
-
+@login_required(login_url='/authentication/login/')
 def delete_expense(request, pk):
     expense = Expense.objects.get(id=pk)
     expense.delete()

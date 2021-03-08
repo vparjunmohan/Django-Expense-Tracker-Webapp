@@ -8,5 +8,4 @@ urlpatterns = [
     path('edit-expense/<int:pk>', expense_edit, name='expense-edit'),
     path('delete-expense/<int:pk>', delete_expense, name='expense-delete'),
     path('search-expenses', csrf_exempt(search_expenses), name='search_expenses'),
-
 ]
