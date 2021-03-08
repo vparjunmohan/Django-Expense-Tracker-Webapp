@@ -1,10 +1,9 @@
-from django.core.checks import messages
 from django.shortcuts import render
-from .models import UserPreference
-import os 
+import os
 import json
 from django.conf import settings
-from django.contrib import  messages
+from .models import UserPreference
+from django.contrib import messages
 # Create your views here.
 
 
@@ -16,19 +15,17 @@ def index(request):
         data = json.load(json_file)
         for k, v in data.items():
             currency_data.append({'name': k, 'value': v})
+
     exists = UserPreference.objects.filter(user=request.user).exists()
     user_preferences = None
-
     if exists:
         user_preferences = UserPreference.objects.get(user=request.user)
-    
-    if request.method=='GET':
-        # import pdb
-        # pdb.set_trace()
-        context = {'currencies': currency_data, 'user_preferences': user_preferences}
-        return render(request, 'preferences/index.html', context)
+    if request.method == 'GET':
 
+        return render(request, 'preferences/index.html', {'currencies': currency_data,
+                                                        'user_preferences': user_preferences})
     else:
+
         currency = request.POST['currency']
         if exists:
             user_preferences.currency = currency
